@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Room</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.js"></script>
+</head>
+<body>
+    <h2>Welcome to Room: {{ room_code }}</h2>
+
+    <input type="text" id="username" placeholder="Enter your name" required>
+    <button onclick="joinRoom()">Join Chat</button>
+	<p id="typingIndicator"></p>
+    <div id="chat-box"></div>
+
+    <input type="text" id="message" placeholder="Type a message">
+    <button onclick="sendMessage()">Send</button>
+
+    <script>
+        var socket = io();
+        var room = "{{ room_code }}";
+        var username = "";
+
+        function joinRoom() {
+            username = document.getElementById('username').value;
+            if (username.trim() === "") {
+                alert("Enter your name first!");
+                return;
+            }
+            socket.emit('join_room', { username: username, room: room });
+        }
+
+        function sendMessage() {
+            var message = document.getElementById('message').value;
+            if (message.trim() === "") return;
+            socket.emit('send_message', { username: username, message: message, room: room });
+            document.getElementById('message').value = "";
+        }
+
+        socket.on('receive_message', function(data) {
+            var chatBox = document.getElementById('chat-box');
+            chatBox.innerHTML += "<p><strong>" + data.username + ":</strong> " + data.message + "</p>";
+        });
+
+        socket.on('user_joined', function(data) {
+            var chatBox = document.getElementById('chat-box');
+            chatBox.innerHTML += "<p><em>" + data.username + " joined the chat</em></p>";
+        });
+    </script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
