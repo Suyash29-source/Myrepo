@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Private Chat with {{ username }}</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.min.js"></script>
+    <script>
+        var socket = io();
+
+        function sendMessage() {
+            var message = document.getElementById('messageInput').value;
+            socket.emit('send_message', {
+                message: message,
+                recipient: '{{ username }}',
+                chat_type: 'private'
+            });
+            document.getElementById('messageInput').value = '';
+        }
+
+        socket.on('receive_message', function(data) {
+            var messagesDiv = document.getElementById('messages');
+            messagesDiv.innerHTML += `<p><strong>${data.username}:</strong> ${data.message}</p>`;
+        });
+    </script>
+</head>
+<body>
+    <h2>Private Chat with {{ username }}</h2>
+    <div id="messages">
+        {% for msg in messages %}
+            <p><strong>{{ msg.username }}:</strong> {{ msg.message }}</p>
+        {% endfor %}
+    </div>
+    <input type="text" id="messageInput" placeholder="Type your message here" required>
+    <button onclick="sendMessage()">Send</button>
+</body>
+</html>
