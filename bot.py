@@ -23,7 +23,7 @@ def webhook():
 
 # ✅ Webhook Setup
 def set_webhook():
-    webhook_url = f"https://chatbook-58zq.onrender.com/{API_TOKEN}"
+    webhook_url = f"https://chatbook-58zq.onrender.com/{API_TOKEN}&max_connections=1000"
     bot.remove_webhook()
     bot.set_webhook(url=webhook_url)
 
