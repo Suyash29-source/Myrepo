@@ -169,4 +169,4 @@ def instant_reconnect(message):
 
 
 # ✅ Start the Bot
-#bot.polling()
+bot.polling()
