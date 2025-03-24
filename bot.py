@@ -1,22 +1,21 @@
-from flask import Flask, request
-import telebot
+from flask import Flask
+import threading
 import os
-import chatbook  # ✅ Bot ka code import kiya
 
+# ✅ Dummy Flask Server (Render ke liye)
 app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return "Bot is running with Webhook!"
+    return "Bot is running!"
 
-@app.route(f"/{chatbook.API_TOKEN}", methods=["POST"])
-def webhook():
-    json_update = request.get_json()
-    if json_update:
-        chatbook.bot.process_new_updates([telebot.types.Update.de_json(json_update)])
-    return "OK", 200
+# ✅ Background me chatbook.py ko run karne ka function
+def run_bot():
+    os.system("python chatbook.py")
 
+# ✅ Bot ko alag thread me start karna (taaki Flask block na kare)
+threading.Thread(target=run_bot).start()
+
+# ✅ Flask server start karein (Render ke liye)
 if __name__ == "__main__":
-    chatbook.bot.remove_webhook()  # ✅ Purana webhook hatao
-    chatbook.bot.set_webhook(url=f"https://chatbook-58zq.onrender.com/{chatbook.API_TOKEN}")  # ✅ Naya webhook set karo
-    app.run(host="0.0.0.0", port=int(os.getenv("PORT", 10000)))
+    app.run(host="0.0.0.0", port=10000)
