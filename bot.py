@@ -1,21 +1,22 @@
 from flask import Flask
 import threading
 import os
+import time
 
-# ✅ Dummy Flask Server (Render ke liye)
 app = Flask(__name__)
 
 @app.route('/')
 def home():
     return "Bot is running!"
 
-# ✅ Background me chatbook.py ko run karne ka function
-def run_bot():
-    os.system("python chatbook.py")
+# ✅ Restart bot every 20 mins to prevent timeout
+def restart_bot():
+    while True:
+        os.system("python chatbook.py")  # Run the bot
+        time.sleep(150)  # Restart every 20 minutes
 
-# ✅ Bot ko alag thread me start karna (taaki Flask block na kare)
-threading.Thread(target=run_bot).start()
+# ✅ Run bot in a separate thread
+threading.Thread(target=restart_bot).start()
 
-# ✅ Flask server start karein (Render ke liye)
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
