@@ -1,1 +1,1 @@
-worker: python chatbook.py
+web: gunicorn bot:app
