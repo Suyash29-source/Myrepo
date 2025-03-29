@@ -7,6 +7,9 @@ from telebot.types import ReplyKeyboardMarkup, KeyboardButton
 API_TOKEN = "7806071446:AAFukCv3jKDCM8cQKnk0UevHzGjCl5QD13E"
 CHANNEL_USERNAME = "chatbook29"  # ✅ Channel Username
 
+TOKEN = "7806071446:AAFukCv3jKDCM8cQKnk0UevHzGjCl5QD13E"
+bot_instance = telebot.TeleBot(TOKEN)  # 🔹 bot.py ka bot object use karne ke liye ek instance
+
 bot = telebot.TeleBot(API_TOKEN)
 
 queue = {"Male": [], "Female": [], "Any": []}
@@ -169,4 +172,4 @@ def instant_reconnect(message):
 
 
 # ✅ Start the Bot
-bot.polling()
+#bot.polling()
