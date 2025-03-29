@@ -1,10 +1,9 @@
 from flask import Flask, request
 import telebot
-import bot  # 🔹 bot.py ko import kar diya
-import os
+import bot  # bot.py ko import kar rahe hain
 
 TOKEN = "7806071446:AAFukCv3jKDCM8cQKnk0UevHzGjCl5QD13E"
-bot_instance = telebot.TeleBot(TOKEN)  # 🔹 bot.py ka bot object use karne ke liye ek instance
+bot_instance = telebot.TeleBot(TOKEN)
 
 app = Flask(__name__)
 
@@ -14,9 +13,13 @@ def home():
 
 @app.route('/' + TOKEN, methods=['POST'])
 def get_message():
+    print("🚀 Request Received from Telegram")  # ✅ Check karne ke liye print
+    print(request.get_data())  # ✅ Ye dekhne ke liye ki Telegram se data aa raha hai ya nahi
+
     json_str = request.get_data().decode('UTF-8')
     update = telebot.types.Update.de_json(json_str)
-    bot_instance.process_new_updates([update])  # 🔹 bot.py ka bot instance use kar ke update process karna
+    bot_instance.process_new_updates([update])
+
     return 'OK', 200
 
 if __name__ == "__main__":
