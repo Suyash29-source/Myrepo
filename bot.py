@@ -30,6 +30,23 @@ def send_welcome(message):
 def echo_all(message):
     bot.send_message(message.chat.id, f"📩 You sent: {message.text}")
 
+
+@app.route('/' + TOKEN, methods=['POST'])
+def webhook():
+    try:
+        json_str = request.get_data().decode('UTF-8')
+        update = telebot.types.Update.de_json(json_str)
+        print("🚀 Request Received:", json_str)  
+        print("✅ Processing Update...")  # Debugging ke liye
+
+        bot.process_new_updates([update])  # ✅ Yeh update process karega
+        print("✅ Update Processed!")  # Debugging ke liye
+
+    except Exception as e:
+        print("❌ Error:", str(e))  # Agar koi error aaye toh print kare
+
+    return 'OK', 200
+
 if __name__ == "__main__":
     bot.remove_webhook()
     bot.set_webhook(url="https://chatbook-igjr.onrender.com/" + TOKEN)
